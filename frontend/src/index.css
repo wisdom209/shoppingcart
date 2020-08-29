@@ -3,7 +3,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
@@ -146,7 +146,7 @@ a{
 
 .selectToCartDetails button {
     margin-top: 0.5rem;
-    background-color: #FFA500;
+    background-color: #ffa500;
     color: blue;
     border-radius: 0.1rem;
     padding: 0.5rem;
@@ -184,19 +184,19 @@ a{
     padding: 1rem;
     border-bottom: 0.15rem solid black;
     padding-bottom: 0;
-    flex-wrap: wrap;
+   
 }
 
 .shoppingCartHeaderDetails {
     display: flex;
     justify-content: space-between;
     padding: 1rem;
-    flex-wrap: wrap;
+    
 }
 
 .shoppingCartHeaderDetails img {
-    width: 10rem;
-    height: 10rem;
+    width: 3rem;
+    height: 3rem;
 }
 
 .cartItemBox {
@@ -227,7 +227,7 @@ a{
     width: 21vw;
     padding: 0.5rem;
     color: blue;
-    background-color: #FFA500;
+    background-color: #ffa500;
     border-radius: 0.2rem;
     margin-top: 1rem;
 }
@@ -281,7 +281,7 @@ a{
 
 .signInBtn {
     width: 102%;
-    background-color: #FFA500;
+    background-color: #ffa500;
     color: black;
     padding: 0.2rem;
     font-size: medium;
@@ -306,46 +306,58 @@ a{
 }
 
 /* payment screen */
-.checkBoxDiv{
+.checkBoxDiv {
     margin-bottom: 1rem !important;
 }
 
 /* place order screen */
 
-
-.placeOrderBox div{
-   margin-bottom: 0.5rem;
+.placeOrderBox div {
+    margin-bottom: 0.5rem;
 }
 
-.placeOrderBox button{
-    background-color:rgb(255, 165, 0);
+.placeOrderBox button {
+    background-color: rgb(255, 165, 0);
     padding: 0.4rem;
     text-align: center;
     border-radius: 0.5rem;
     margin-top: 0.2rem;
-    
 }
 
 /* create product */
-.createProductTable{
+.createProductTable {
     width: 100%;
     padding: 1rem;
 }
 
-.createProductTable th{
- text-align: start;
+.createProductTable th {
+    text-align: start;
 }
 
-.createProductTable tbody tr:nth-child(odd){
-    background-color: #F2F2F2;
+.createProductTable tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
 }
 
-.createProduct button{
+.createProduct button {
     margin-left: 1rem;
 }
 
-.createTableTitle{
+.createTableTitle {
     margin-left: 1rem;
     padding-top: 1rem;
     font-weight: bolder;
+}
+
+/* step component */
+.stepStrip {
+    display: flex;
+    justify-content: center;
+    align-content: flex-start;
+}
+
+.stepStrip div{
+    /* border-top: 0.5rem solid #ffa500; */
+    color : #ffa500;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }

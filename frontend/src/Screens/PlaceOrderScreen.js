@@ -1,8 +1,14 @@
 import React from "react";
+import StepComponent from "../Components/StepComponent";
 
 function PlaceOrderScreen() {
+    const step1 = {borderTop: "0.5rem solid #ffa500"} 
+    const step2 = {borderTop: "0.5rem solid #ffa500"} 
+    const step3 = {borderTop: "0.5rem solid #ffa500"} 
+    const step4 = {borderTop: "0.5rem solid #ffa500"} 
     return (
         <div className="placeOrderBox">
+             <StepComponent step1={step1} step2={step2} step3={step3} step4={step4}/>
             <div className="cartBox">
                 <div className="cartDetails">
                     <div style={{ marginLeft: "1rem" }}>

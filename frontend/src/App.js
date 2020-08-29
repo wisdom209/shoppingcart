@@ -55,7 +55,7 @@ function App() {
                     <Route path="/createaccount" component={CreateAccount} />
                     <Route path="/signin" component={SignInScreen} />
                     <Route path="/cart/:id?" component={CartScreen} />
-                    <Route path="/selectedProduct/:id" component={SelectedProduct} />
+                    <Route path="/selectedProduct/:id?" component={SelectedProduct} />
                     <Route path="/" exact={true} component={HomeScreen} />
                 </div>
 
