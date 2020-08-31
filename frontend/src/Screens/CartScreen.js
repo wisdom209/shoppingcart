@@ -1,17 +1,22 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { deleteFromCart } from "../Redux/Actions.js/UpdateCartItem";
-import UpdateQuantity from "../Redux/Actions.js/UpdateQuantity";
+import UpdateQuantity, { UpdateDelete } from "../Redux/Actions.js/UpdateQuantity";
+import UpdateOrderDetails from "../Redux/Actions.js/UpdateOrderDetails";
 
 function CartScreen(props) {
-    // const id = props.match.params.id;
+    // const id = props.match.paramsitem._id;
     const dispatch = useDispatch();
 
     const cartItems = useSelector((state) => state.cartItems);
     const selectedQuantity = useSelector((state) => state.selectedQuantity);
+    const globalName = useSelector((state) => state.globalName);
 
     const deleteItem = (item) => {
         dispatch(deleteFromCart(item));
+        delete selectedQuantity[item._id];
+        dispatch(UpdateDelete(selectedQuantity));
     };
 
     const totalItems = () => {
@@ -23,19 +28,34 @@ function CartScreen(props) {
     };
 
     const calculatedPrice = (item) => {
-        let totalPrice = Number(selectedQuantity[item.id] * item.price);
+        let totalPrice = Number(selectedQuantity[item._id] * item.price);
 
         return totalPrice.toFixed(2);
     };
 
     const totalPrice = () => {
-        const priceArray = cartItems.map((val) => selectedQuantity[val.id] * val.price);
+        const priceArray = cartItems.map((val) => selectedQuantity[val._id] * val.price);
         let sum = 0;
         for (let i of priceArray) {
             sum = i + sum;
         }
 
         return sum.toFixed(2);
+    };
+
+    const setOrderDetails = () => {
+        const shippingPrice = totalItems() > 40 ? totalPrice() * 0.1 : 0;
+        const tax = totalPrice() * 0.15;
+        const orderTotal = Number(totalPrice()) + Number(shippingPrice) + Number(tax);
+
+        dispatch(
+            UpdateOrderDetails({
+                totalPrice    : totalPrice(),
+                shippingPrice : shippingPrice.toFixed(2),
+                tax           : tax.toFixed(2),
+                orderTotal    : orderTotal.toFixed(2)
+            })
+        );
     };
 
     return (
@@ -48,7 +68,7 @@ function CartScreen(props) {
                 <div>
                     {cartItems.length > 0 ? (
                         cartItems.map((val) => (
-                            <div className="shoppingCartHeaderDetails" key={val.id}>
+                            <div className="shoppingCartHeaderDetails" key={val._id}>
                                 <div className="cartItemBox">
                                     <div>
                                         <img src={val.image} alt="slim shirt" />
@@ -58,9 +78,9 @@ function CartScreen(props) {
                                         <div>
                                             Qty :{" "}
                                             <select
-                                                value={Number(Number(selectedQuantity[val.id]))}
+                                                value={selectedQuantity[val._id]}
                                                 onChange={(e) => {
-                                                    dispatch(UpdateQuantity({ [val.id]: e.target.value }));
+                                                    dispatch(UpdateQuantity({ [val._id]: e.target.value }));
                                                 }}
                                             >
                                                 {Array(val.quantity).fill("x").map((v, i) => {
@@ -86,7 +106,11 @@ function CartScreen(props) {
                     Subtotal ({totalItems()} items): ${totalPrice()}
                 </div>
                 <div>
-                    <button>Proceed to checkout</button>
+                    <Link to={globalName ? "/shipping" : "/signin/redirect?=true"}>
+                        <button onClick={setOrderDetails} disabled={totalItems() < 1}>
+                            {totalItems() < 1 ? "" : "Proceed to checkout"}
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>

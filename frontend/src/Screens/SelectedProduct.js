@@ -11,7 +11,7 @@ function SelectedProduct() {
     const [ initialSelection, setInitialSelection ] = useState(1);
     const addToCart = (item) => {
         dispatch(updateToCart(item));
-        dispatch(UpdateQuantity({ [selectedProduct.id]: Number(initialSelection) }));
+        dispatch(UpdateQuantity({ [selectedProduct._id]: initialSelection }));
     };
 
     return (

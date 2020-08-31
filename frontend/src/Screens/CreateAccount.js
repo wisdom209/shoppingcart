@@ -1,11 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Cookie from "js-cookie";
+import UpdateGlobalName from "../Redux/Actions.js/UpdateGlobalName";
 
-function CreateAccount() {
+function CreateAccount(props) {
+    const [ name, setName ] = useState("");
+    const [ email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
+    const [ confirmPassword, setConfirmPassword ] = useState("");
+    const dispatch = useDispatch();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (password === confirmPassword) {
+            axios
+                .post("api/users/register", { name, email, password })
+                .then((response) => {
+                    console.log(response.data);
+                    Cookie.set("token", response.data.token);
+                    dispatch(UpdateGlobalName(response.data.name));
+                    Cookie.set("globalName", response.data.name);
+                })
+                .catch((err) => console.log(err));
+            props.history.push("/");
+        }
+        else {
+            //show user info that passwords do not match
+        }
+    };
+
     return (
         <center>
             <center className="signInDiv">
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="signInHeader">
                         <b>Create Account</b>
                     </div>
@@ -15,7 +44,7 @@ function CreateAccount() {
                                 <b>Name</b>
                             </div>
                             <div>
-                                <input type="text" value="" />
+                                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
                             </div>
                         </label>
                     </div>
@@ -25,7 +54,7 @@ function CreateAccount() {
                                 <b>Email</b>
                             </div>
                             <div>
-                                <input type="email" value="" />
+                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                             </div>
                         </label>
                     </div>
@@ -36,7 +65,7 @@ function CreateAccount() {
                                 <b>Password</b>{" "}
                             </div>
                             <div>
-                                <input type="password" value="" />
+                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                             </div>
                         </label>
                     </div>
@@ -47,13 +76,19 @@ function CreateAccount() {
                                 <b>Re-enter Password</b>{" "}
                             </div>
                             <div>
-                                <input type="password" value="" />
+                                <input
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
                             </div>
                         </label>
                     </div>
 
                     <div className="inputDiv">
-                        <button className="signInBtn">Create your amazona account</button>
+                        <button className="signInBtn" type="submit">
+                            Create your amazona account
+                        </button>
                     </div>
                     <div className="inputDiv">
                         <div>

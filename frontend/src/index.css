@@ -327,7 +327,10 @@ a {
 /* create product */
 .createProductTable {
     width: 100%;
-    padding: 1rem;
+    padding: 0.5rem;
+    margin : 1rem;
+    margin-bottom: 5rem;
+    border : 0.1rem black solid;
 }
 
 .createProductTable th {

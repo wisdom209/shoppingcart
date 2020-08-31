@@ -4,9 +4,10 @@ export const DELETE_FROM_CART = "DELETE_FROM_CART";
 const CartItemsReducer = (state = [], { type, payload }) => {
     switch (type) {
         case UPDATE_T0_CART:
-            return [ ...state, payload ].filter((val, index)=>[...state,payload].indexOf(val) === index);
+            // return [ ...state, payload ].filter((val, index)=>[...state,payload].indexOf(val) === index);
+            return [ ...[ ...state ].filter((val) => val._id !== payload._id), payload ];
         case DELETE_FROM_CART:
-            return state.filter((val) => val.id !== payload.id);
+            return state.filter((val) => val._id !== payload._id);
         default:
             return state;
     }

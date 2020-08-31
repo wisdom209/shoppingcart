@@ -1,8 +1,12 @@
-const { UPDATE_QUANTITY_IN_CART } = require("../Reducers/QuantityReducer")
+const { UPDATE_QUANTITY_IN_CART } = require("../Reducers/QuantityReducer");
 
-const UpdateQuantity = (payload)=>({
+const UpdateQuantity = (payload) => ({
+    type    : UPDATE_QUANTITY_IN_CART,
+    payload : payload
+});
+
+export const UpdateDelete=(payload)=>({
     type : UPDATE_QUANTITY_IN_CART,
     payload : payload
 })
-
-export default UpdateQuantity
+export default UpdateQuantity;
