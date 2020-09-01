@@ -8,7 +8,7 @@ function SideBar(props) {
     const products = useSelector(state => state.products)
 
     return (
-        <div className={props.sideBarClass}>
+        <div ref={props.sideBarRef} className={props.sideBarClass}>
             <div className="sideBarTitle">
                 <div>Shopping Category</div>
                 <div>

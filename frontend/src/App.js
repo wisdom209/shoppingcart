@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
@@ -14,25 +14,48 @@ import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
 import Title from "./Components/Title";
 import SideBar from "./Components/SideBar";
 
-
 function App() {
     const [ sideBarClass, setsideBarClass ] = useState("sideBarGone");
 
     const isAuthenticated = Cookie.get("token");
 
+    const sideBarRef = useRef();
+
     useEffect(() => {
-        axios
-            .get("api/users/checkuser", { headers: { authorization: `Bearer ${isAuthenticated}` } })
-            .then((response) => response.data)
-            .catch((err) => Cookie.set("token", ""));
-    }, [isAuthenticated]);
+        document.addEventListener("mousedown", handleSideBarOutsideClick);
+        return () => document.removeEventListener("mousedown", handleSideBarOutsideClick);
+    }, []);
+
+    const handleSideBarOutsideClick = (e) => {
+        if (sideBarRef.current.contains(e.target)) {
+           //inside click
+           return;
+        }
+        else {
+            setsideBarClass("sideBarGone"); //outside click
+        }
+    };
+
+    useEffect(
+        () => {
+            axios
+                .get("api/users/checkuser", { headers: { authorization: `Bearer ${isAuthenticated}` } })
+                .then((response) => response.data)
+                .catch((err) => Cookie.set("token", ""));
+        },
+        [ isAuthenticated ]
+    );
 
     return (
         <BrowserRouter>
             <div className="App">
-                <Title showSideBar={()=>setsideBarClass("sideBar")} />
-                
-                <SideBar removeSideBar={()=>setsideBarClass("sideBarGone")} sideBarClass={sideBarClass}/>
+                <Title showSideBar={() => setsideBarClass("sideBar")} />
+
+                <SideBar
+                    sideBarRef={sideBarRef}
+                    removeSideBar={() => setsideBarClass("sideBarGone")}
+                    sideBarClass={sideBarClass}
+                />
 
                 <div className="appBody">
                     <Switch>
