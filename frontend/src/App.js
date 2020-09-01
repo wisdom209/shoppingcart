@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Cookie from "js-cookie";
-import { BrowserRouter, Route, Link, Redirect, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import SelectedProduct from "./Screens/SelectedProduct";
 import HomeScreen from "./Screens/HomeScreen";
 import CartScreen from "./Screens/CartScreen";
@@ -26,7 +25,7 @@ function App() {
             .get("api/users/checkuser", { headers: { authorization: `Bearer ${isAuthenticated}` } })
             .then((response) => response.data)
             .catch((err) => Cookie.set("token", ""));
-    }, []);
+    }, [isAuthenticated]);
 
     return (
         <BrowserRouter>
