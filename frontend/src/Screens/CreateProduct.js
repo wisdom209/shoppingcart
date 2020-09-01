@@ -18,8 +18,8 @@ function CreateProduct() {
         },
         [ dispatch ]
     );
-
-    const [ id, setId ] = useState("");
+    const [ updateProduct, setUpdateProduct ] = useState(false);
+    const [ identity, setIdentity ] = useState("empty");
     const [ name, setName ] = useState("");
     const [ price, setPrice ] = useState("");
     const [ category, setCategory ] = useState("");
@@ -33,7 +33,7 @@ function CreateProduct() {
     const [ showProducts, setShowProducts ] = useState(true);
     const token = Cookie.get("token");
 
-    const createAProduct = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const productToSend = {
             title        : name,
@@ -46,19 +46,55 @@ function CreateProduct() {
             rating,
             numOfReviews : numOfReviews
         };
-        axios
-            .post("/api/products/createproduct", productToSend, { headers: { authorization: `Bearer ${token}` } })
-            .then((response) => console.log(response.data))
-            .catch((err) => console.log(err));
+        if (updateProduct) {
+            axios
+                .put("/api/products/updateproduct", Object.assign({}, productToSend, { identity }), {
+                    headers : { authorization: `Bearer ${token}` }
+                })
+                .then((response) => console.log(response.data))
+                .catch((err) => console.log(err));
+        }
+        else {
+            axios
+                .post("/api/products/createproduct", productToSend, { headers: { authorization: `Bearer ${token}` } })
+                .then((response) => console.log(response.data))
+                .catch((err) => console.log(err));
+        }
+
+        setShowProducts(true);
+        setUpdateProduct(false);
+        setTimeout(() => {
+            axios.get("/api/products/").then((response) => {
+                if (response) {
+                    dispatch(UpdateAllProducts(response.data));
+                }
+            });
+        }, 500);
     };
 
-    const editProduct = () => {};
+    const editProduct = (item) => {
+        setShowProducts(false);
+        setIdentity(item._id);
+        setName(item.title);
+        setPrice(item.price);
+        setCategory(item.category);
+        setBrand(item.brand);
+        setDescription(item.description);
+        setImage(item.image);
+        setQuantity(item.quantity);
+        setRating(item.rating);
+        setNumOfReviews(item.numOfReviews);
+        setUpdateProduct(true);
+    };
 
     const deleteProduct = (id) => {
         const token = Cookie.get("token");
-        console.log(token);
+
         axios
-            .delete("/api/products/deleteproduct", { params: { id: id }, headers: { authorization: `Bearer ${token}` } })
+            .delete("/api/products/deleteproduct", {
+                params  : { id: id },
+                headers : { authorization: `Bearer ${token}` }
+            })
             .then((responser) => {
                 axios.get("/api/products/").then((response) => {
                     if (response) {
@@ -75,7 +111,22 @@ function CreateProduct() {
                 <button
                     style={{ padding: "0.5rem", margin: "0.5rem" }}
                     onClick={() => {
+                        setIdentity("");
+                        setName("");
+                        setPrice("");
+                        setCategory("");
+                        setBrand("");
+                        setDescription("");
+                        setImage("");
+                        setQuantity("");
+                        setRating("");
+                        setNumOfReviews("");
                         setShowProducts(!showProducts);
+                        axios.get("/api/products/").then((response) => {
+                            if (response) {
+                                dispatch(UpdateAllProducts(response.data));
+                            }
+                        });
                     }}
                 >
                     {showProducts ? "create product" : "Show Products"}
@@ -120,9 +171,9 @@ function CreateProduct() {
                                                 <td>{val.brand}</td>
                                                 <td>{val.description}</td>
                                                 <td>{val.rating}</td>
-                                                <td>{val.NumOfReviews}</td>
+                                                <td>{val.numOfReviews}</td>
                                                 <td>
-                                                    <button onClick={() => editProduct(val._id)}>Edit</button>{" "}
+                                                    <button onClick={() => editProduct(val)}>Edit</button>{" "}
                                                     <button onClick={() => deleteProduct(val._id)}>Delete</button>
                                                 </td>
                                             </tr>
@@ -134,9 +185,9 @@ function CreateProduct() {
                     ) : (
                         <center>
                             <center className="signInDiv">
-                                <form onSubmit={createAProduct}>
+                                <form onSubmit={handleSubmit}>
                                     <div className="signInHeader">
-                                        <b>Create Product</b>
+                                        <b>{updateProduct ? "Update Product" : "Create Product"}</b>
                                     </div>
                                     <div className="inputDiv">
                                         <label htmlFor="Name">
@@ -267,8 +318,8 @@ function CreateProduct() {
                                     </div>
 
                                     <div className="inputDiv">
-                                        <button type="submit" className="signInBtn">
-                                            Create product
+                                        <button type="submit" className="signInBtn" style={{ marginLeft: "-0.2rem" }}>
+                                            {updateProduct ? "Update Product" : "Create Product"}
                                         </button>
                                     </div>
                                 </form>

@@ -1,17 +1,47 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import StepComponent from "../Components/StepComponent";
 
-function PlaceOrderScreen() {
+function PlaceOrderScreen(props) {
     const step1 = { borderTop: "0.5rem solid #ffa500" };
     const step2 = { borderTop: "0.5rem solid #ffa500" };
     const step3 = { borderTop: "0.5rem solid #ffa500" };
     const step4 = { borderTop: "0.5rem solid #ffa500" };
 
     const shippingDetails = useSelector((state) => state.shippingDetails);
-    const orderDetails = useSelector((state) => state.orderDetails);
     const cartItems = useSelector((state) => state.cartItems);
     const selectedQuantity = useSelector((state) => state.selectedQuantity);
+
+    useEffect(
+        () => {
+            cartItems.length < 1 && props.history.push("/cart");
+        },
+        [ cartItems]
+    );
+
+    const calculateTotalPrice = () => {
+        const PriceArray = cartItems.map((val) => val.price * selectedQuantity[val._id]);
+        let sum = 0;
+        for (let i of PriceArray) {
+            sum = i + sum;
+        }
+        return sum;
+    };
+
+    const calculateTax = () => {
+        return calculateTotalPrice() * 0.15;
+    };
+
+    const calculateShipping = () => {
+       if(cartItems.length < 40){
+           return 0
+       }else{
+           return calculateTotalPrice() * 0.1
+       }
+    };
+    const calculateOrderTotal = () => {
+        return calculateTotalPrice() + calculateTax() + calculateShipping();
+    };
 
     return (
         <div className="placeOrderBox">
@@ -21,7 +51,9 @@ function PlaceOrderScreen() {
                     <div style={{ marginLeft: "1rem" }}>
                         <b>Shipping</b>
                     </div>
-                    <div style={{ marginLeft: "1rem" }}>{shippingDetails.address} {shippingDetails.city}, {shippingDetails.country}</div>
+                    <div style={{ marginLeft: "1rem" }}>
+                        {shippingDetails.address} {shippingDetails.city}, {shippingDetails.country}
+                    </div>
                     <div style={{ marginLeft: "1rem" }}>
                         <b>Payment</b>
                     </div>
@@ -44,7 +76,7 @@ function PlaceOrderScreen() {
                                     </div>
                                 </div>
                                 <div>
-                                    <b>${val.price}</b>
+                                    <b>${val.price * selectedQuantity[val._id]}</b>
                                 </div>
                             </div>
                         );
@@ -57,29 +89,29 @@ function PlaceOrderScreen() {
                         </div>
                         <div
                             style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                fontSize: "small",
-                                flexWrap: "wrap"
+                                display        : "flex",
+                                justifyContent : "space-between",
+                                fontSize       : "small",
+                                flexWrap       : "wrap"
                             }}
                         >
                             <div>Items</div>
-                            <div>${orderDetails.totalPrice}</div>
+                            <div>${calculateTotalPrice().toFixed(2)}</div>
                         </div>
                         <div
                             style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                fontSize: "small",
-                                flexWrap: "wrap"
+                                display        : "flex",
+                                justifyContent : "space-between",
+                                fontSize       : "small",
+                                flexWrap       : "wrap"
                             }}
                         >
                             <div>Shipping</div>
-                            <div>${orderDetails.shippingPrice}</div>
+                            <div>${calculateShipping().toFixed(2)}</div>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "small" }}>
                             <div>Tax</div>
-                            <div>${orderDetails.tax}</div>
+                            <div>${calculateTax().toFixed(2)}</div>
                         </div>
                         <div
                             style={{
@@ -91,7 +123,7 @@ function PlaceOrderScreen() {
                             }}
                         >
                             <div>Order Total</div>
-                            <div>${orderDetails.orderTotal}</div>
+                            <div>${calculateOrderTotal().toFixed(2)}</div>
                         </div>
                     </div>
                 </div>

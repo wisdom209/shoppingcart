@@ -6,9 +6,9 @@ import QuantityReducer from "./Reducers/QuantityReducer";
 import AllProductsReducer from "./Reducers/AllProductsReducer";
 import GlobalNameReducer from "./Reducers/GlobalNameReducer";
 import ShippingDetailsReducer from "./Reducers/ShippingDetailsReducer";
-import OrderDetailsReducer from "./Reducers/OrderDetailsReducer";
 import { persistStore, persistReducer } from "redux-persist";
 import storageSession from "redux-persist/lib/storage/session";
+import FilterProductReducer from "./Reducers/FilterProductReducer";
 
 const persistConfig = {
     key     : "root",
@@ -22,20 +22,12 @@ const rootReducer = combineReducers({
     products         : AllProductsReducer,
     globalName       : GlobalNameReducer,
     shippingDetails  : ShippingDetailsReducer,
-    orderDetails     : OrderDetailsReducer
+    filteredProducts   : FilterProductReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const middleware = [ thunk ];
-
-// const store = createStore(
-//     persistReducer,
-//     compose(
-//         applyMiddleware(...middleware),
-//         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-//     )
-// );
 
 export let store = createStore(
     persistedReducer,

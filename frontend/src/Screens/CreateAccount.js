@@ -10,24 +10,44 @@ function CreateAccount(props) {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ confirmPassword, setConfirmPassword ] = useState("");
+    const [ validationError, setValidationError ] = useState("");
     const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         if (password === confirmPassword) {
+
             axios
                 .post("api/users/register", { name, email, password })
                 .then((response) => {
-                    console.log(response.data);
+                    try {
+                        if(response.data.msg){
+                            setValidationError(response.data.msg)
+                        }else{
+                            setValidationError("")
+                        }
+                    } catch (error) {
+                        
+                    }
+                 
                     Cookie.set("token", response.data.token);
                     dispatch(UpdateGlobalName(response.data.name));
                     Cookie.set("globalName", response.data.name);
+                    if (response.data.token) {
+                        props.history.push("/");
+                    }
                 })
-                .catch((err) => console.log(err));
-            props.history.push("/");
+                .catch((err) => {
+                    try {
+                       
+                        setValidationError(err.response.data.validationError[0].msg);
+                    } catch (error) {}
+                });
         }
         else {
             //show user info that passwords do not match
+            setValidationError("Passwords do not match");
         }
     };
 
@@ -38,6 +58,13 @@ function CreateAccount(props) {
                     <div className="signInHeader">
                         <b>Create Account</b>
                     </div>
+                    {validationError ? (
+                        <div style={{ color: "red" }} className="inputDiv">
+                            {validationError}
+                        </div>
+                    ) : (
+                        <span />
+                    )}
                     <div className="inputDiv">
                         <label htmlFor="Name">
                             <div>

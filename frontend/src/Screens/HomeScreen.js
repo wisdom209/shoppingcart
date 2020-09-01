@@ -4,15 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import UpdateCartItems from "../Redux/Actions.js/UpdateSelectedItems";
 import UpdateAllProducts from "../Redux/Actions.js/UpdateAllProducts";
+import { filterAll } from "../Redux/Actions.js/FilterActions";
 
 function HomeScreen() {
     const dispatch = useDispatch();
     const products = useSelector((state) => state.products);
+    const filteredProducts = useSelector(state=>state.filteredProducts)
 
     useEffect(() => {
         axios.get("/api/products/").then((response) => {
             if (response) {
                 dispatch(UpdateAllProducts(response.data));
+                if(filteredProducts.length < 1){
+                    dispatch(filterAll(response.data))
+                }
             }
         });
     }, [dispatch]);
@@ -21,9 +26,11 @@ function HomeScreen() {
         dispatch(UpdateCartItems(item));
     };
 
+    
+
     return (
         <div className="itemGallery">
-            {products.map((val) => (
+            {filteredProducts.map((val) => (
                 <div key={val._id} className="itemBox">
                     <div className="itemImageBox">
                         <Link to={`selectedproduct/${val._id}`}>

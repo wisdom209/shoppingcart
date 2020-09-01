@@ -7,6 +7,8 @@ a {
     text-decoration: none;
 }
 
+
+
 .appHeader {
     display: flex;
     justify-content: space-between;
@@ -33,9 +35,26 @@ a {
     color: white;
 }
 
+.appHamburger button:hover{
+    color : orange;
+}
+
 .title {
     font-size: 1.5rem;
     font-weight: bolder;
+}
+
+.title a:hover{
+    color : orange
+}
+
+
+.signInLink button:hover{
+    border: 3px solid orange;
+}
+
+.signInLink a {
+    cursor:default;
 }
 
 .cart_signin {
@@ -47,6 +66,10 @@ a {
 
 .cartLink {
     margin-right: 0.5rem;
+}
+
+.cartLink a:hover{
+color : orange;
 }
 
 .sideBar {
@@ -220,7 +243,10 @@ a {
     height: fit-content;
     border-radius: 0.2rem;
     padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 5rem;
 }
 
 .cartSubtotalBox button {
@@ -234,7 +260,7 @@ a {
 
 .cartSubtotalBox div {
     font-weight: bolder;
-    font-size: larger;
+    font-size: small;
 }
 
 .cartTitle {

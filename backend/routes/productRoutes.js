@@ -30,11 +30,11 @@ productRouter.post("/createproduct", jwtCheck, (request, response) => {
     }
 });
 
-productRouter.delete("/deleteproduct",jwtCheck, (request, response) => {
+productRouter.delete("/deleteproduct", jwtCheck, (request, response) => {
     if (request.user.isAdmin === false) {
         return response.status(500).send({ msg: "make sure you are signed in as an admin" });
     }
-    response.send(request.query)
+    response.send(request.query);
     const productId = request.query.id;
     Product.findById(productId)
         .then((product) => {
@@ -50,7 +50,8 @@ productRouter.put("/updateproduct", jwtCheck, (request, response) => {
         return response.status(500).send({ msg: "make sure you are signed in as an admin" });
     }
 
-    const productId = request.body.id;
+    const productId = request.body.identity;
+
     Product.findById(productId)
         .then((product) => {
             (product.name = request.body.name),
@@ -62,8 +63,7 @@ productRouter.put("/updateproduct", jwtCheck, (request, response) => {
                 (product.quantity = request.body.quantity),
                 (product.rating = request.body.rating || 0),
                 (product.numOfReviews = request.body.numOfReviews || 0);
-        })
-        .then((product) => {
+
             if (product) {
                 product
                     .save()

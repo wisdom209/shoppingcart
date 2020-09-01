@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteFromCart } from "../Redux/Actions.js/UpdateCartItem";
 import UpdateQuantity, { UpdateDelete } from "../Redux/Actions.js/UpdateQuantity";
-import UpdateOrderDetails from "../Redux/Actions.js/UpdateOrderDetails";
 
 function CartScreen(props) {
     // const id = props.match.paramsitem._id;
@@ -12,12 +11,6 @@ function CartScreen(props) {
     const cartItems = useSelector((state) => state.cartItems);
     const selectedQuantity = useSelector((state) => state.selectedQuantity);
     const globalName = useSelector((state) => state.globalName);
-
-    const deleteItem = (item) => {
-        dispatch(deleteFromCart(item));
-        delete selectedQuantity[item._id];
-        dispatch(UpdateDelete(selectedQuantity));
-    };
 
     const totalItems = () => {
         let sum = 0;
@@ -43,19 +36,10 @@ function CartScreen(props) {
         return sum.toFixed(2);
     };
 
-    const setOrderDetails = () => {
-        const shippingPrice = totalItems() > 40 ? totalPrice() * 0.1 : 0;
-        const tax = totalPrice() * 0.15;
-        const orderTotal = Number(totalPrice()) + Number(shippingPrice) + Number(tax);
-
-        dispatch(
-            UpdateOrderDetails({
-                totalPrice    : totalPrice(),
-                shippingPrice : shippingPrice.toFixed(2),
-                tax           : tax.toFixed(2),
-                orderTotal    : orderTotal.toFixed(2)
-            })
-        );
+    const deleteItem = (item) => {
+        dispatch(deleteFromCart(item));
+        delete selectedQuantity[item._id];
+        dispatch(UpdateDelete(selectedQuantity));
     };
 
     return (
@@ -107,9 +91,7 @@ function CartScreen(props) {
                 </div>
                 <div>
                     <Link to={globalName ? "/shipping" : "/signin/redirect?=true"}>
-                        <button onClick={setOrderDetails} disabled={totalItems() < 1}>
-                            {totalItems() < 1 ? "" : "Proceed to checkout"}
-                        </button>
+                        <button disabled={totalItems() < 1}>{totalItems() < 1 ? "" : "Proceed to checkout"}</button>
                     </Link>
                 </div>
             </div>

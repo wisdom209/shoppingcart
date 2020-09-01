@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import StepComponent from "../Components/StepComponent";
 import UpdateShippingDetails from "../Redux/Actions.js/UpdateShippingDetails";
 
@@ -9,25 +9,13 @@ function ShippingScreen(props) {
     const step3 = { borderTop: "0.5rem solid #c0c0c0" };
     const step4 = { borderTop: "0.5rem solid #c0c0c0" };
 
+    const shippingDetails = useSelector((state) => state.shippingDetails);
     const dispatch = useDispatch();
-
-    const [ address, setAddress ] = useState("");
-    const [ city, setCity ] = useState("");
-    const [ postalCode, setPostalCode ] = useState("");
-    const [ country, setCountry ] = useState("");
 
     const continueToPayment = (e) => {
         e.preventDefault();
-        dispatch(
-            UpdateShippingDetails({
-                address,
-                city,
-                postalCode,
-                country,
-                paymentMethod : ""
-            })
-        );
-        props.history.push("/payment")
+
+        props.history.push("/payment");
     };
 
     return (
@@ -44,7 +32,22 @@ function ShippingScreen(props) {
                                 <b>Address</b>
                             </div>
                             <div>
-                                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required/>
+                                <input
+                                    type="text"
+                                    value={shippingDetails.address}
+                                    onChange={(e) => {
+                                        dispatch(
+                                            UpdateShippingDetails({
+                                                address       : e.target.value,
+                                                city          : shippingDetails.city,
+                                                postalCode    : shippingDetails.postalCode,
+                                                country       : shippingDetails.country,
+                                                paymentMethod : ""
+                                            })
+                                        );
+                                    }}
+                                    required
+                                />
                             </div>
                         </label>
                     </div>
@@ -54,7 +57,22 @@ function ShippingScreen(props) {
                                 <b>City</b>
                             </div>
                             <div>
-                                <input type="text" value={city} onChange={(e) => setCity(e.target.value)} required />
+                                <input
+                                    type="text"
+                                    value={shippingDetails.city}
+                                    onChange={(e) => {
+                                        dispatch(
+                                            UpdateShippingDetails({
+                                                address       : shippingDetails.address,
+                                                city          : e.target.value,
+                                                postalCode    : shippingDetails.postalCode,
+                                                country       : shippingDetails.country,
+                                                paymentMethod : ""
+                                            })
+                                        );
+                                    }}
+                                    required
+                                />
                             </div>
                         </label>
                     </div>
@@ -65,7 +83,22 @@ function ShippingScreen(props) {
                                 <b>Postal code</b>{" "}
                             </div>
                             <div>
-                                <input type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required />
+                                <input
+                                    type="text"
+                                    value={shippingDetails.postalCode}
+                                    onChange={(e) => {
+                                        dispatch(
+                                            UpdateShippingDetails({
+                                                address       : shippingDetails.address,
+                                                city          : shippingDetails.city,
+                                                postalCode    : e.target.value,
+                                                country       : shippingDetails.country,
+                                                paymentMethod : ""
+                                            })
+                                        );
+                                    }}
+                                    required
+                                />
                             </div>
                         </label>
                     </div>
@@ -76,13 +109,28 @@ function ShippingScreen(props) {
                                 <b>Country</b>{" "}
                             </div>
                             <div>
-                                <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} required />
+                                <input
+                                    type="text"
+                                    value={shippingDetails.country}
+                                    onChange={(e) => {
+                                        dispatch(
+                                            UpdateShippingDetails({
+                                                address       : shippingDetails.address,
+                                                city          : shippingDetails.city,
+                                                postalCode    : shippingDetails.postalCode,
+                                                country       : e.target.value,
+                                                paymentMethod : ""
+                                            })
+                                        );
+                                    }}
+                                    required
+                                />
                             </div>
                         </label>
                     </div>
 
                     <div className="inputDiv">
-                         <button className="signInBtn" type="submit">
+                        <button className="signInBtn" type="submit">
                             Continue
                         </button>
                     </div>

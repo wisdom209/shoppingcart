@@ -9,6 +9,8 @@ function SignInScreen(props) {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
 
+    const [validationError, setValidationError] = useState("")
+
     const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
@@ -16,13 +18,25 @@ function SignInScreen(props) {
         axios
             .post("/api/users/signin", { email, password })
             .then((response) =>{
+              
                 const token = response.data.token;
+                try {
+                    if(response.data.msg){
+                        setValidationError(response.data.msg)
+                    }else{
+                        setValidationError("")
+                    }
+                    
+                } catch (error) {
+                   // do nothing 
+                }
+                
+
                 if(token){
                     Cookie.set("token", token);
                     Cookie.set("globalName", response.data.name)
                     dispatch(UpdateGlobalName(response.data.name))
 
-                    console.log(props)
                     if(props.location.pathname.includes("redirect")){
                         props.history.push('/shipping')
                         
@@ -32,7 +46,12 @@ function SignInScreen(props) {
                     
                 } 
             })
-            .catch((err) => console.log(err));
+            .catch((err) =>{
+                
+                setValidationError(err.response.data.validationError[0].msg)
+                // validationError = err.response.data.validationError[0].msg
+                // console.log(validationError)
+            } );
     };
 
 
@@ -44,6 +63,10 @@ function SignInScreen(props) {
                     <div className="signInHeader">
                         <b>Sign-in</b>
                     </div>
+                    {validationError? <div style={{color:"red"}} className="inputDiv">
+                        {validationError}
+                    </div> : <span></span>}
+                    
                     <div className="inputDiv">
                         <label htmlFor="email">
                             <div>
