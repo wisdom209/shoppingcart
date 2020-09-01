@@ -65,43 +65,13 @@ function CreateAccount(props) {
                     )}
 
                     <InputDiv tag="name" type="text" onChange={(e) => setName(e.target.value)} />
-
-                    <div className="inputDiv">
-                        <label htmlFor="email">
-                            <div>
-                                <b>Email</b>
-                            </div>
-                            <div>
-                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                            </div>
-                        </label>
-                    </div>
-                    <div className="inputDiv">
-                        <label htmlFor="password">
-                            <div>
-                                {" "}
-                                <b>Password</b>{" "}
-                            </div>
-                            <div>
-                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                            </div>
-                        </label>
-                    </div>
-                    <div className="inputDiv">
-                        <label htmlFor="password">
-                            <div>
-                                {" "}
-                                <b>Re-enter Password</b>{" "}
-                            </div>
-                            <div>
-                                <input
-                                    type="password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                />
-                            </div>
-                        </label>
-                    </div>
+                    <InputDiv tag="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
+                    <InputDiv tag="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
+                    <InputDiv
+                        tag="Re-enter Password"
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
 
                     <div className="inputDiv">
                         <button className="signInBtn" type="submit">
