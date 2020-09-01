@@ -12,110 +12,29 @@ import CreateProduct from "./Screens/CreateProduct";
 import ShippingScreen from "./Screens/ShippingScreen";
 import PaymentScreen from "./Screens/PaymentScreen";
 import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
-import { ResetAction } from "./Redux/Actions.js/ResetAction";
-import {
-    filterAll,
-    filterMenClothing,
-    filterWomenClothing,
-    filterElectronics,
-    filterJewellery
-} from "./Redux/Actions.js/FilterActions";
+import Title from "./Components/Title";
+import SideBar from "./Components/SideBar";
 
-function App(props) {
+
+function App() {
     const [ sideBarClass, setsideBarClass ] = useState("sideBarGone");
 
     const isAuthenticated = Cookie.get("token");
-    const globalName = useSelector((state) => state.globalName);
-    const products = useSelector((state) => state.products);
-    const dispatch = useDispatch();
 
-    useEffect(
-        () => {
-            axios
-                .get("api/users/checkuser", { headers: { authorization: `Bearer ${isAuthenticated}` } })
-                .then((response) => response.data)
-                .catch((err) => Cookie.set("token", ""));
-        },
-        [  ]
-    );
-
-    const signOut = () => {
-        Cookie.set("token", "");
-        Cookie.set("globalName", "");
-        dispatch(ResetAction());
-
-        if (props.history) {
-            props.history.push("/");
-        }
-    };
+    useEffect(() => {
+        axios
+            .get("api/users/checkuser", { headers: { authorization: `Bearer ${isAuthenticated}` } })
+            .then((response) => response.data)
+            .catch((err) => Cookie.set("token", ""));
+    }, []);
 
     return (
         <BrowserRouter>
             <div className="App">
-                <div className="appHeader">
-                    <div className="titleBox">
-                        <span className="appHamburger">
-                            <button onClick={() => setsideBarClass("sideBar")}>
-                                <b>&#9776;</b>
-                            </button>
-                        </span>{" "}
-                        <span className="title">
-                            <Link to="/">amazona</Link>
-                        </span>
-                    </div>
-                    <div className="cart_signin">
-                        <div className="cartLink">
-                            <Link to="/cart">Cart</Link>
-                        </div>{" "}
-                        &nbsp;{" "}
-                        <div className="signInLink">
-                            {globalName ? (
-                                <span>
-                                    <button onClick={signOut}>Sign out</button>&nbsp; &nbsp;{" "}
-                                    <Link to="#">
-                                        <i>Hello {globalName}</i>
-                                    </Link>
-                                </span>
-                            ) : (
-                                <Link to="/signin">Sign in</Link>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                <Title showSideBar={()=>setsideBarClass("sideBar")} />
+                
+                <SideBar removeSideBar={()=>setsideBarClass("sideBarGone")} sideBarClass={sideBarClass}/>
 
-                <div className={sideBarClass}>
-                    <div className="sideBarTitle">
-                        <div>Shopping Category</div>
-                        <div>
-                            <button onClick={() => setsideBarClass("sideBarGone")}>&times;</button>
-                        </div>
-                    </div>
-                    <div className="sideBarCategory">
-                        <Link to="#" onClick={() => dispatch(filterAll(products))}>
-                            All categories
-                        </Link>
-                    </div>
-                    <div className="sideBarCategory">
-                        <Link to="#" onClick={() => dispatch(filterMenClothing(products))}>
-                            Men clothing
-                        </Link>
-                    </div>
-                    <div className="sideBarCategory">
-                        <Link to="#" onClick={() => dispatch(filterWomenClothing(products))}>
-                            Women clothing
-                        </Link>
-                    </div>
-                    <div className="sideBarCategory">
-                        <Link to="#" onClick={() => dispatch(filterElectronics(products))}>
-                            Electronics
-                        </Link>
-                    </div>
-                    <div className="sideBarCategory">
-                        <Link to="#" onClick={() => dispatch(filterJewellery(products))}>
-                            Jewellery
-                        </Link>
-                    </div>
-                </div>
                 <div className="appBody">
                     <Switch>
                         <Route path="/createaccount" component={CreateAccount} />

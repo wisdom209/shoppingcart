@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Cookie from "js-cookie";
 import UpdateGlobalName from "../Redux/Actions.js/UpdateGlobalName";
+import InputDiv from "../Components/InputDiv";
 
 function CreateAccount(props) {
     const [ name, setName ] = useState("");
@@ -17,20 +18,18 @@ function CreateAccount(props) {
         e.preventDefault();
 
         if (password === confirmPassword) {
-
             axios
                 .post("api/users/register", { name, email, password })
                 .then((response) => {
                     try {
-                        if(response.data.msg){
-                            setValidationError(response.data.msg)
-                        }else{
-                            setValidationError("")
+                        if (response.data.msg) {
+                            setValidationError(response.data.msg);
                         }
-                    } catch (error) {
-                        
-                    }
-                 
+                        else {
+                            setValidationError("");
+                        }
+                    } catch (error) {}
+
                     Cookie.set("token", response.data.token);
                     dispatch(UpdateGlobalName(response.data.name));
                     Cookie.set("globalName", response.data.name);
@@ -40,7 +39,6 @@ function CreateAccount(props) {
                 })
                 .catch((err) => {
                     try {
-                       
                         setValidationError(err.response.data.validationError[0].msg);
                     } catch (error) {}
                 });
@@ -65,16 +63,9 @@ function CreateAccount(props) {
                     ) : (
                         <span />
                     )}
-                    <div className="inputDiv">
-                        <label htmlFor="Name">
-                            <div>
-                                <b>Name</b>
-                            </div>
-                            <div>
-                                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                            </div>
-                        </label>
-                    </div>
+
+                    <InputDiv tag="name" type="text" onChange={(e) => setName(e.target.value)} />
+
                     <div className="inputDiv">
                         <label htmlFor="email">
                             <div>
