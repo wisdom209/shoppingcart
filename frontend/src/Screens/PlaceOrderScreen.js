@@ -16,7 +16,7 @@ function PlaceOrderScreen(props) {
         () => {
             cartItems.length < 1 && props.history.push("/cart");
         },
-        [ cartItems]
+        [ cartItems, props.history]
     );
 
     const calculateTotalPrice = () => {

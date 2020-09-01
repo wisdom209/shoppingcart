@@ -1,6 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import SelectedItemsReducer from "./Reducers/SelectedItemsReducer";
-import thunk from "redux-thunk";
 import CartItemsReducer from "./Reducers/CartItemsReducer";
 import QuantityReducer from "./Reducers/QuantityReducer";
 import AllProductsReducer from "./Reducers/AllProductsReducer";
@@ -27,14 +26,13 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [ thunk ];
 
 export let store = createStore(
-    persistedReducer,
-    compose(
-        applyMiddleware(...middleware),
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    )
+    persistedReducer
+    // compose(
+    //     applyMiddleware(...middleware),
+    //     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    // )
 );
 
 export let persistor = persistStore(store);

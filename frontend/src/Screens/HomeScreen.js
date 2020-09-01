@@ -8,7 +8,6 @@ import { filterAll } from "../Redux/Actions.js/FilterActions";
 
 function HomeScreen() {
     const dispatch = useDispatch();
-    const products = useSelector((state) => state.products);
     const filteredProducts = useSelector(state=>state.filteredProducts)
 
     useEffect(() => {
@@ -20,7 +19,7 @@ function HomeScreen() {
                 }
             }
         });
-    }, [dispatch]);
+    }, [dispatch, filteredProducts.length]);
 
     const addToCart = (item) => {
         dispatch(UpdateCartItems(item));
