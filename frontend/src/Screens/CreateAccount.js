@@ -64,9 +64,9 @@ function CreateAccount(props) {
                         <span />
                     )}
 
-                    <InputDiv tag="name" type="text" onChange={(e) => setName(e.target.value)} />
-                    <InputDiv tag="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
-                    <InputDiv tag="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
+                    <InputDiv tag="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                    <InputDiv tag="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <InputDiv tag="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     <InputDiv
                         tag="Re-enter Password"
                         type="password"
