@@ -48,7 +48,7 @@ function HomeScreen() {
                     <div className="itemPrice">
                         <b>${val.price}</b>
                     </div>
-                    <div className="itemRating">0 starts (0 Reviews)</div>
+                    <div className="itemRating">0 stars (0 Reviews)</div>
                 </div>
             ))}
         </div>

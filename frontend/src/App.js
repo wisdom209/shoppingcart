@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import Cookie from "js-cookie";
-import { BrowserRouter, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Link, Redirect, Switch } from "react-router-dom";
 import SelectedProduct from "./Screens/SelectedProduct";
 import HomeScreen from "./Screens/HomeScreen";
 import CartScreen from "./Screens/CartScreen";
@@ -27,6 +28,16 @@ function App(props) {
     const globalName = useSelector((state) => state.globalName);
     const products = useSelector((state) => state.products);
     const dispatch = useDispatch();
+
+    useEffect(
+        () => {
+            axios
+                .get("api/users/checkuser", { headers: { authorization: `Bearer ${isAuthenticated}` } })
+                .then((response) => response.data)
+                .catch((err) => Cookie.set("token", ""));
+        },
+        [  ]
+    );
 
     const signOut = () => {
         Cookie.set("token", "");
@@ -106,6 +117,13 @@ function App(props) {
                     </div>
                 </div>
                 <div className="appBody">
+                    <Switch>
+                        <Route path="/createaccount" component={CreateAccount} />
+                        <Route path="/signin" component={SignInScreen} />
+                        <Route path="/cart/:id?" component={CartScreen} />
+                        <Route path="/selectedProduct/:id?" component={SelectedProduct} />
+                        <Route path="/" exact={true} component={HomeScreen} />
+                    </Switch>
                     {isAuthenticated ? (
                         <div>
                             <Route path="/placeorder" component={PlaceOrderScreen} />
@@ -116,12 +134,6 @@ function App(props) {
                     ) : (
                         <Redirect to="/signin" />
                     )}
-
-                    <Route path="/createaccount" component={CreateAccount} />
-                    <Route path="/signin" component={SignInScreen} />
-                    <Route path="/cart/:id?" component={CartScreen} />
-                    <Route path="/selectedProduct/:id?" component={SelectedProduct} />
-                    <Route path="/" exact={true} component={HomeScreen} />
                 </div>
 
                 <div className="appFooter">All Rights Reserved &copy; 2020</div>
