@@ -8,7 +8,7 @@ function InputDiv(props) {
                                 <b>{props.tag}</b>
                             </div>
                             <div>
-                                <input type={props.type} value={props.value} onChange={props.onChange} />
+                                <input type={props.type} value={props.value} onChange={props.onChange} required/>
                             </div>
                         </label>
                     </div>
