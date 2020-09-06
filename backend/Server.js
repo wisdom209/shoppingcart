@@ -16,6 +16,7 @@ app.use(cors());
 dotenv.config();
 
 const mongoDbUrl = config.mongoDbUrl;
+//const mongoDbUrl = "mongodb+srv://freezwiz:wizdoz@cluster0.fdboo.mongodb.net/shoppingcart?retryWrites=true&w=majority";
 
 mongoose
     .connect(mongoDbUrl, {

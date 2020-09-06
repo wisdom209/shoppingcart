@@ -46,8 +46,6 @@ function SignInScreen(props) {
             })
             .catch((err) => {
                 setValidationError(err.response.data.validationError[0].msg);
-                // validationError = err.response.data.validationError[0].msg
-                // console.log(validationError)
             });
     };
 

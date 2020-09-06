@@ -27,7 +27,7 @@ function Title(props) {
                 </button>
             </span>{" "}
             <span className="title">
-                <Link to="/">Shopping Gallery</Link>
+                <Link to="/">M E N U</Link>
             </span>
         </div>
         <div className="cart_signin">

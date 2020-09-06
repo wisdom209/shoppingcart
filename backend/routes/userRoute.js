@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { check, validationResult } from "express-validator";
 import { isAuth } from "../utils";
 import jwtCheck from "../jwtCheck";
-import bcrypt from "bcryptjs";
+
 
 const userRouter = express.Router();
 
@@ -31,7 +31,7 @@ userRouter.post(
         })
             .then((data) => {
                 jwt.sign(
-                    { id: data.id, isAdmin: data.isAdmin, name: data.name },
+                    { id: data.id, name: data.name, isAdmin: data.isAdmin, },
                     "secretKey",
                     { expiresIn: 86000 },
                     (err, token) => {
@@ -69,7 +69,7 @@ userRouter.post(
         user
             .save()
             .then((data) => {
-                jwt.sign({ id: data.id, name: data.name }, "secretKey", { expiresIn: 86000 }, (err, token) => {
+                jwt.sign({ id: data.id, name: data.name, isAdmin : data.isAdmin }, "secretKey", { expiresIn: 86000 }, (err, token) => {
                     if (err) throw err;
                     response.send({ token, name: data.name });
                 });
@@ -78,18 +78,29 @@ userRouter.post(
     }
 );
 
-userRouter.get("/createadmin", (request, response) => {
+userRouter.post("/createadmin", (request, response) => {
     const user = new User({
         name     : "wisdom",
         email    : "freezwiz@hi2.in",
         password : "password",
         isAdmin  : true
     });
-
+    
     user
-        .save()
-        .then((data) => response.send("Admin " + data.name + " created"))
-        .catch((err) => response.send({ msg: err }));
+    .save()
+    .then((data) => {
+        jwt.sign({ id: data.id, name: data.name, isAdmin : data.isAdmin }, "secretKey", { expiresIn: 86000 }, (err, token) => {
+            if (err) throw err;
+            response.send({ token, name: data.name });
+        });
+    })
+    .catch((err) => response.send({ msg: "Email already exists" }));
+
 });
+
+
+userRouter.get("/checkuser", jwtCheck, (request, response)=>{
+    response.send({name : request.user.name})
+})
 
 export default userRouter;
